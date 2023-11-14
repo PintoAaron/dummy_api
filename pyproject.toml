@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "dummy-api"
+version = "0.1.0"
+description = ""
+authors = ["Pinto Tetteh Aaron <aaronpinto111@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
