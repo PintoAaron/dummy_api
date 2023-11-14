@@ -22,7 +22,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
         return {"data": new_user}
     except Exception as error:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
+            status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists")
 
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=Dict[str, List[UserOut]])
