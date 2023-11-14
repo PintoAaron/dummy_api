@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict
-from ..database import get_db
-from ..models import User
-from ..schema import UserCreate, UserOut
-from ..utils import get_password_hash
+from database import get_db
+from models import User
+from schema import UserCreate, UserOut
+from utils import get_password_hash
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -12,12 +12,17 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=Dict[str, UserOut])
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    user.password = get_password_hash(user.password)
-    new_user = User(**user.dict())
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return {"data": new_user}
+    try:
+        user.password = get_password_hash(user.password)
+        new_user = User(name=user.name, email=user.email,
+                        hashed_password=user.password)
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return {"data": new_user}
+    except Exception as error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
 
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=Dict[str, List[UserOut]])
