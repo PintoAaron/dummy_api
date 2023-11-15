@@ -17,3 +17,7 @@ class RequestCreate(BaseModel):
     user_id : int
     food: str
     
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
