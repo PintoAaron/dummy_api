@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
 from models import Requests, User
-from schema import RequestCreate
+from schema import RequestCreate,TokenData
+from oauth2 import get_current_user
 
 
 
@@ -17,7 +18,7 @@ def get_requests(db: Session = Depends(get_db)):
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_request(request: RequestCreate, db: Session = Depends(get_db)):
+def create_request(request: RequestCreate, db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
     if db.query(User).filter(User.user_id == request.user_id).first() is None:
         raise HTTPException(
               status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
